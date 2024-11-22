@@ -6,7 +6,14 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
+  isSearching: boolean = false; // Tracks whether the search input is active
   constructor() {}
+
+  toggleSearch() {
+    console.log('toggleSearch');
+    this.isSearching = !this.isSearching;
+  }
+
+
 
 }

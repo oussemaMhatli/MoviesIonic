@@ -1,0 +1,27 @@
+<ion-content>
+  <div class="bigfilm" [ngStyle]="{ 'background-image': 'url(' + randomFilm?.image + ')' }">
+    <div class="film-info">
+      <div class="film-details">
+        <h2>{{ randomFilm?.title }}</h2>
+        <p class="subtitle">{{ randomFilm?.subtitle }}</p>
+
+      </div>
+      <ion-button class="watch-now"><ion-icon name="play-outline" slot="start"></ion-icon>Watch Now</ion-button>
+    </div>
+  </div>
+  <br>
+    <div class="category-list">
+      <ion-item *ngFor="let category of categories" class="category-item">
+        <ion-label>{{ category.name }}</ion-label>
+      </ion-item>
+    </div>
+    <br>
+    <ion-title style="color: aliceblue;"> Movies</ion-title>
+    <div class="film-list">
+      <div class="film-item" *ngFor="let film of films">
+        <img [src]="film.image" alt="{{ film.title }}" />
+        <h3>{{ film.title }}</h3>
+      </div>
+    </div>
+
+</ion-content>

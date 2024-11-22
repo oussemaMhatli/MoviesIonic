@@ -1,0 +1,91 @@
+/* Home Page Styles */
+
+.category-list {
+  display: flex;
+  overflow-x: auto; /* Allow horizontal scrolling */
+  gap: 10px; /* Space between items */
+  -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  opacity: 0.9;
+}
+
+.category-list::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Webkit-based browsers (Chrome, Safari) */
+}
+
+.category-item {
+  flex: 0 0 auto; /* Prevent items from stretching */
+  width: 15vh; /* Set a fixed width for the items */
+  text-align: center;
+  border-radius: 20px; /* Set border radius to 20px */
+  border: 1px solid rgb(171, 166, 166); /* Set red border with 2px width */
+}
+
+
+ion-content {
+  --overflow: hidden; /* Prevent vertical scrolling */
+}
+.bigfilm {
+  width: 100%;               /* Full width */
+  height: 40vh;              /* 30% of the viewport height */
+  background-size: cover;    /* Cover the div with the background image */
+  background-position: center; /* Center the background image */
+  display: flex;
+  align-items: center;       /* Center content vertically */
+  justify-content: center;   /* Center content horizontally */
+  color: white;              /* Text color */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a text shadow for readability */
+  position: relative;        /* Make it a positioning context for the absolute child */
+  border-bottom-left-radius: 3em; /* Bottom-left corner rounded */
+  border-bottom-right-radius: 3em;
+}
+
+.watch-now {
+  --border-radius: 2em;
+  height: 7vh;
+}
+.film-info{
+  position: absolute;        /* Positioning the div relative to .bigfilm */
+  bottom: 2vh;                 /* Align to the bottom of the container */
+  left: 2vh;                   /* Align to the left side of the container */
+
+  border-radius: 10px;
+}
+
+ion-content {
+  --background: rgb(31, 28, 28); /* Set the content background to black */
+  color: white;        /* Default text color to white for readability */
+}
+.film-list {
+  display: flex;             /* Make items inline */
+  gap: 10px;                 /* Add space between items */
+  overflow-x: auto;          /* Allow horizontal scrolling */
+  padding: 10px;
+  scroll-snap-type: x mandatory; /* Snap scrolling behavior */
+  -ms-overflow-style: none;  /* Hide scrollbar for Internet Explorer */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+.film-list::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Webkit-based browsers (Chrome, Safari) */
+}
+
+.film-item {
+  flex: 0 0 auto;            /* Prevent items from stretching */
+  text-align: center;        /* Center text under image */
+  width: 150px;              /* Fixed width for each item */
+  scroll-snap-align: center; /* Align items to the center when scrolling */
+}
+
+.film-item img {
+  width: 100%;               /* Make the image fit its container */
+  height: 200px;             /* Set a fixed height for the images */
+  object-fit: cover;         /* Crop images to fill the container */
+  border-radius: 10px;       /* Add rounded corners */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+}
+
+.film-item h3 {
+  font-size: 14px;           /* Set a smaller font size */
+  color: white;              /* Text color */
+  margin-top: 5px;           /* Space between image and title */
+}

@@ -1,0 +1,29 @@
+.SearchBar
+{
+  border-radius: 2em;
+}
+.custom-tab-bar {
+  --background: #1a1a1a;         /* Background color of the tab bar */
+  --color: #b3b3b3;              /* Default color of icons and labels */
+  --color-selected: #ffffff;     /* Active tab color */
+  --indicator-color: #ff5733;    /* Color of the active tab indicator */
+  border-top: 1px solid #333;    /* Optional: Add a border at the top */
+}
+
+ion-tab-button {
+  --color: #b3b3b3;              /* Default color for inactive tabs */
+  --color-selected: #ffffff;     /* Color when tab is active */
+}
+
+ion-icon {
+  font-size: 20px;               /* Adjust the icon size */
+}
+
+ion-label {
+  font-size: 12px;               /* Adjust the label size */
+  text-transform: uppercase;     /* Optional: Make text uppercase */
+}
+
+ion-tab-bar::before {
+  background: transparent;       /* Remove the default separator background */
+}
