@@ -13,11 +13,11 @@ const routes: Routes = [
   },
   {
     path: 'signin',
-    loadChildren: () => import('./signin/signin.module').then( m => m.SigninPageModule)
+    loadChildren: () => import('./auth/signin/signin.module').then( m => m.SigninPageModule)
   },
   {
     path: 'signup',
-    loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule)
+    loadChildren: () => import('./auth/signup/signup.module').then( m => m.SignupPageModule)
   },
 {
     path: 'movies',
@@ -31,7 +31,19 @@ const routes: Routes = [
   {
     path: 'playlist',
     loadChildren: () => import('./customerside/playlist/playlist.module').then( m => m.PlaylistPageModule)
+  },  {
+    path: 'home-admin',
+    loadChildren: () => import('./adminSide/home-admin/home-admin.module').then( m => m.HomeAdminPageModule)
   },
+  {
+    path: 'movies-managment',
+    loadChildren: () => import('./adminSide/movies-managment/movies-managment.module').then( m => m.MoviesManagmentPageModule)
+  },
+  {
+    path: 'users-management',
+    loadChildren: () => import('./adminSide/users-management/users-management.module').then( m => m.UsersManagementPageModule)
+  },
+
 ];
 
 @NgModule({
