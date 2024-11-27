@@ -61,10 +61,14 @@
               <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
             </ion-button>
           </ion-item>
-          
-          <ion-item>
-            <ion-label>Profile Picture</ion-label>
-            <ion-button expand="block" (click)="takePicture()">Take Picture</ion-button>
+          <ion-item > 
+          <ion-content>
+            <ion-fab  horizontal="center" slot="fixed" >
+              <ion-fab-button (click)="takePicture()" >
+                <ion-icon name="camera"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </ion-content>
           </ion-item>
           
           <ion-item *ngIf="capturedImage">

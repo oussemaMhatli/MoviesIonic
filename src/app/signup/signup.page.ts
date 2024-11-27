@@ -3,7 +3,9 @@ import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, getFirestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+
 import { getStorage, ref, uploadString, getDownloadURL } from '@firebase/storage';
 
 @Component({
@@ -16,9 +18,9 @@ export class SignupPage implements OnInit {
   toggleVisible = false;
   capturedImage: string | undefined;
 
-  constructor(private auth: Auth, private toastController: ToastController) {}
+  constructor(private auth: Auth, private toastController: ToastController) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -32,18 +34,18 @@ export class SignupPage implements OnInit {
   async takePicture() {
     try {
       const image = await Camera.getPhoto({
-        quality: 90,
+        quality: 100,
         source: CameraSource.Camera,
         resultType: CameraResultType.DataUrl,
       });
-  
-      this.capturedImage = image.webPath;
-      console.log('Captured Image:', this.capturedImage); 
+
+      this.capturedImage = image.dataUrl;
+      console.log('Captured Image:', this.capturedImage);
     } catch (error) {
       console.error('Error capturing image: ', error);
     }
   }
-  
+
   // Sign up user
   async signup(form: NgForm) {
     const { email, password, firstName, lastName, age } = form.value;
@@ -69,12 +71,12 @@ export class SignupPage implements OnInit {
         const storage = getStorage();
         const imageRef = ref(storage, 'profile_pictures/' + userCredential.user.uid);
         const uploadTask = await uploadString(imageRef, this.capturedImage, 'data_url');
-        
+
         imageUrl = await getDownloadURL(uploadTask.ref);
       } else {
         console.error('Captured image is invalid');
       }
-      
+
 
       await addDoc(collection(getFirestore(), 'users'), {
         uid: userCredential.user.uid,
@@ -82,13 +84,17 @@ export class SignupPage implements OnInit {
         firstName,
         lastName,
         age,
-        profileImage: imageUrl,  
+        state: 1,
+        // profileImage: imageUrl,  
       });
 
     } catch (error) {
       this.showToast('Error signing up', 'danger');
       console.error('Error signing up:', error);
     }
+
+
+
   }
 
   async showToast(message: string, color: string) {
