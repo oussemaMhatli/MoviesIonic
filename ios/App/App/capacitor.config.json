@@ -1,0 +1,13 @@
+{
+	"appId": "com.example.app",
+	"appName": "Movies",
+	"webDir": "www",
+	"packageClassList": [
+		"AppPlugin",
+		"CAPCameraPlugin",
+		"FilesystemPlugin",
+		"HapticsPlugin",
+		"KeyboardPlugin",
+		"StatusBarPlugin"
+	]
+}

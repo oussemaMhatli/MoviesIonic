@@ -3,9 +3,10 @@ import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, getFirestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+
 import { getStorage, ref, uploadString, getDownloadURL } from '@firebase/storage';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -17,11 +18,9 @@ export class SignupPage implements OnInit {
   toggleVisible = false;
   capturedImage: string | undefined;
 
-  constructor(private auth: Auth, private toastController: ToastController,private router:Router) {}
+  constructor(private auth: Auth, private toastController: ToastController) { }
 
-  ngOnInit() {
-    console.log("Entering signup page");
-  }
+  ngOnInit() { }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -35,12 +34,12 @@ export class SignupPage implements OnInit {
   async takePicture() {
     try {
       const image = await Camera.getPhoto({
-        quality: 90,
+        quality: 100,
         source: CameraSource.Camera,
         resultType: CameraResultType.DataUrl,
       });
 
-      this.capturedImage = image.webPath;
+      this.capturedImage = image.dataUrl;
       console.log('Captured Image:', this.capturedImage);
     } catch (error) {
       console.error('Error capturing image: ', error);
@@ -85,15 +84,17 @@ export class SignupPage implements OnInit {
         firstName,
         lastName,
         age,
-        profileImage: imageUrl,
-        role:0,
+        state: 1,
+        // profileImage: imageUrl,  
       });
-      this.router.navigate(['/signin']);
 
     } catch (error) {
       this.showToast('Error signing up', 'danger');
       console.error('Error signing up:', error);
     }
+
+
+
   }
 
   async showToast(message: string, color: string) {
