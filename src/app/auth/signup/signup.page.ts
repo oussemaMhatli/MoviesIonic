@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { getStorage, ref, uploadString, getDownloadURL } from '@firebase/storage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -16,9 +17,11 @@ export class SignupPage implements OnInit {
   toggleVisible = false;
   capturedImage: string | undefined;
 
-  constructor(private auth: Auth, private toastController: ToastController) {}
+  constructor(private auth: Auth, private toastController: ToastController,private router:Router) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log("Entering signup page");
+  }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -36,14 +39,14 @@ export class SignupPage implements OnInit {
         source: CameraSource.Camera,
         resultType: CameraResultType.DataUrl,
       });
-  
+
       this.capturedImage = image.webPath;
-      console.log('Captured Image:', this.capturedImage); 
+      console.log('Captured Image:', this.capturedImage);
     } catch (error) {
       console.error('Error capturing image: ', error);
     }
   }
-  
+
   // Sign up user
   async signup(form: NgForm) {
     const { email, password, firstName, lastName, age } = form.value;
@@ -69,12 +72,12 @@ export class SignupPage implements OnInit {
         const storage = getStorage();
         const imageRef = ref(storage, 'profile_pictures/' + userCredential.user.uid);
         const uploadTask = await uploadString(imageRef, this.capturedImage, 'data_url');
-        
+
         imageUrl = await getDownloadURL(uploadTask.ref);
       } else {
         console.error('Captured image is invalid');
       }
-      
+
 
       await addDoc(collection(getFirestore(), 'users'), {
         uid: userCredential.user.uid,
@@ -82,8 +85,10 @@ export class SignupPage implements OnInit {
         firstName,
         lastName,
         age,
-        profileImage: imageUrl,  
+        profileImage: imageUrl,
+        role:0,
       });
+      this.router.navigate(['/signin']);
 
     } catch (error) {
       this.showToast('Error signing up', 'danger');
