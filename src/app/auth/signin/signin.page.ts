@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { jwtDecode } from "jwt-decode";
-import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Import Firestore functions
+import { collection, getDocs, query, where } from 'firebase/firestore'; // Import Firestore functions
+import { Firestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-signin',
@@ -14,7 +15,8 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Import Firest
 export class SigninPage implements OnInit {
   showPassword = false;
   toggleVisible = false;
-
+  private firestore: Firestore = inject(Firestore); 
+  userData: any = null;
   constructor(
     private auth: Auth,
     private toastController: ToastController,
@@ -74,11 +76,14 @@ export class SigninPage implements OnInit {
       // Decode the token and get the UID
       const decodedToken = await this.decodeToken(token);
       console.log('Decoded Token:', decodedToken);
-
+      const id=decodedToken.user_id;
+      console.log('User ID:', id);
       // Retrieve user data from Firestore using the UID
-      if (decodedToken) {
-         console.log('User Data:', JSON.stringify(decodedToken.email));
-         if(decodedToken.email=='admin@admin.com'){
+      if (id) {
+        this.userData = await this.fetchUserByUid(id);
+         console.log('User data:', this.userData);
+
+         if(this.userData.role=='admin'){
           this.router.navigate(['/home-admin']);
          }else{
           this.router.navigate(['/home/mv']);
@@ -103,4 +108,30 @@ export class SigninPage implements OnInit {
     });
     toast.present();
   }
+
+
+
+  async  fetchUserByUid(uid: string) {
+    try {
+        const usersCollection = collection(this.firestore, "users");
+
+        const userQuery = query(usersCollection, where("uid", "==", uid));
+
+        const querySnapshot = await getDocs(userQuery);
+
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const userData = { id: userDoc.id, ...userDoc.data() };
+
+            console.log("Données utilisateur :", userData);
+            return userData;
+        } else {
+            console.error("Aucun utilisateur trouvé avec ce uid :", uid);
+            return null;
+        }
+    } catch (error) {
+        console.error("Erreur lors de la récupération de l'utilisateur :", error);
+        throw error;
+    }
+}
 }

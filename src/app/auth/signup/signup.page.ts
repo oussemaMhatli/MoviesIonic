@@ -3,10 +3,9 @@ import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { addDoc, collection, getFirestore } from '@angular/fire/firestore';
 import { NgForm } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
-import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
-import { Filesystem, Directory } from '@capacitor/filesystem';
-
-import { getStorage, ref, uploadString, getDownloadURL } from '@firebase/storage';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Filesystem, Directory, WriteFileResult } from '@capacitor/filesystem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -17,10 +16,11 @@ export class SignupPage implements OnInit {
   showPassword = false;
   toggleVisible = false;
   capturedImage: string | undefined;
+  savedImageName: string | undefined;
 
-  constructor(private auth: Auth, private toastController: ToastController) { }
+  constructor(private auth: Auth, private toastController: ToastController,private router: Router) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -38,14 +38,45 @@ export class SignupPage implements OnInit {
         source: CameraSource.Camera,
         resultType: CameraResultType.DataUrl,
       });
-
+  
       this.capturedImage = image.dataUrl;
+  
       console.log('Captured Image:', this.capturedImage);
+  
+      if (this.capturedImage) {
+        const fileName = await this.saveImageToLocalAssets(this.capturedImage);
+        if (fileName) {
+          this.savedImageName = fileName; // Stocker le nom du fichier
+          console.log('Image saved successfully:', this.savedImageName);
+        } else {
+          console.error('Failed to save image');
+        }
+      }
     } catch (error) {
       console.error('Error capturing image: ', error);
     }
   }
+  
 
+  async saveImageToLocalAssets(imageDataUrl: string): Promise<string | null> {
+    try {
+      const fileName = `profile_${Date.now()}.jpg`; // Générer un nom de fichier unique
+      const path = `images/${fileName}`; // Stocker dans un sous-répertoire "images" dans le répertoire externe
+      await Filesystem.writeFile({
+        path: path,
+        data: imageDataUrl.split(',')[1], // Enlever le préfixe "data:image/jpeg;base64,"
+        directory: Directory.External, // Utiliser un répertoire externe
+      });
+      
+  
+      console.log('File saved:', fileName);
+      return fileName; // Retourner uniquement le nom du fichier
+    } catch (error) {
+      console.error('Error saving image to assets/images:', error);
+      return null;
+    }
+  }
+  
   // Sign up user
   async signup(form: NgForm) {
     const { email, password, firstName, lastName, age } = form.value;
@@ -63,21 +94,11 @@ export class SignupPage implements OnInit {
         password
       );
 
+
       this.showToast('Signed up successfully', 'success');
       console.log('User signed up successfully:', userCredential.user);
 
-      let imageUrl = '';
-      if (this.capturedImage && this.capturedImage.startsWith('data:image')) {
-        const storage = getStorage();
-        const imageRef = ref(storage, 'profile_pictures/' + userCredential.user.uid);
-        const uploadTask = await uploadString(imageRef, this.capturedImage, 'data_url');
-
-        imageUrl = await getDownloadURL(uploadTask.ref);
-      } else {
-        console.error('Captured image is invalid');
-      }
-
-
+      // Save user data in Firestore
       await addDoc(collection(getFirestore(), 'users'), {
         uid: userCredential.user.uid,
         email,
@@ -85,16 +106,14 @@ export class SignupPage implements OnInit {
         lastName,
         age,
         state: 1,
-        // profileImage: imageUrl,  
+        role: 'user',
+        profileImage: this.capturedImage || '',
       });
-
+      this.router.navigate(['/signin']);
     } catch (error) {
       this.showToast('Error signing up', 'danger');
       console.error('Error signing up:', error);
     }
-
-
-
   }
 
   async showToast(message: string, color: string) {

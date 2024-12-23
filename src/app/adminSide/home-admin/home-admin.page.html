@@ -1,13 +1,62 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>homeAdmin</ion-title>
+    <ion-title>Admin Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/movies-managment']">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Ajout du segment -->
+  <ion-toolbar>
+    <ion-segment value="all" (ionChange)="onSegmentChange($event)">
+      <ion-segment-button value="all">
+        <ion-label>All Users</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="favorites">
+        <ion-label>Favorites Movies</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">homeAdmin</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-list>
+    <!-- Affichage dynamique selon la sélection -->
+    <ion-item-sliding *ngFor="let item of displayedList">
+      <ion-item>
+        <ion-card-header>
+          <ion-grid>
+            <ion-row>
+              <!-- Colonne pour l'image (si utilisateur) -->
+              <ion-col size="3" *ngIf="item.firstName">
+                <img
+                  [src]="item.profileImage || 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'"
+                  alt="User profile picture"
+                  width="100"
+                  style="border-radius: 50%;"
+                />
+              </ion-col>
+
+              <!-- Colonne pour les informations (utilisateur ou film) -->
+              <ion-col size="9" style="display: flex; flex-direction: column; justify-content: center;">
+                <ion-card-title>{{ item.firstName || item.title }}</ion-card-title>
+                <ion-card-subtitle>{{ item.email || item.genre }}</ion-card-subtitle>
+                <ion-card-subtitle *ngIf="item.firstName">Age: {{ item.age }} ans</ion-card-subtitle>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-header>
+      </ion-item>
+
+      <!-- Options qui apparaissent lorsque l'on glisse l'élément -->
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deactivateUser(item.id)">
+          <ion-icon name="close"></ion-icon>
+          Désactiver
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
