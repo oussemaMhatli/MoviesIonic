@@ -15,7 +15,7 @@
         <ion-label>All Users</ion-label>
       </ion-segment-button>
       <ion-segment-button value="favorites">
-        <ion-label>Favorites Movies</ion-label>
+        <ion-label>Favorite Movies</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -29,20 +29,25 @@
         <ion-card-header>
           <ion-grid>
             <ion-row>
-              <!-- Colonne pour l'image (si utilisateur) -->
-              <ion-col size="3" *ngIf="item.firstName">
+              <!-- Colonne pour l'image (utilisateur ou film) -->
+              <ion-col size="3">
                 <img
-                  [src]="item.profileImage || 'https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png'"
-                  alt="User profile picture"
+                  [src]="
+                    item.profileImage || 
+                    item.posterImage || 
+                    'https://via.placeholder.com/100x100?text=No+Image'
+                  "
+                  alt="Image"
                   width="100"
-                  style="border-radius: 50%;"
+                  
+                  style="border-radius: 10%;"
                 />
               </ion-col>
 
-              <!-- Colonne pour les informations (utilisateur ou film) -->
+              <!-- Colonne pour les informations -->
               <ion-col size="9" style="display: flex; flex-direction: column; justify-content: center;">
                 <ion-card-title>{{ item.firstName || item.title }}</ion-card-title>
-                <ion-card-subtitle>{{ item.email || item.genre }}</ion-card-subtitle>
+                <ion-card-subtitle>{{ item.email || item.description }}</ion-card-subtitle>
                 <ion-card-subtitle *ngIf="item.firstName">Age: {{ item.age }} ans</ion-card-subtitle>
               </ion-col>
             </ion-row>
@@ -51,7 +56,7 @@
       </ion-item>
 
       <!-- Options qui apparaissent lorsque l'on glisse l'élément -->
-      <ion-item-options side="end">
+      <ion-item-options side="end" *ngIf="item.firstName">
         <ion-item-option color="danger" (click)="deactivateUser(item.id)">
           <ion-icon name="close"></ion-icon>
           Désactiver

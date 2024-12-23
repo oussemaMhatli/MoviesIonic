@@ -46,16 +46,23 @@ export class HomeAdminPage implements OnInit {
   }
 
   // Fonction pour récupérer la liste des films statiques
-  fetchMovies() {
-    // Liste statique de films
-    this.movies = [
-      { title: 'Inception', genre: 'Science Fiction' },
-      { title: 'The Dark Knight', genre: 'Action' },
-      { title: 'Interstellar', genre: 'Drama' },
-    ];
-
-    console.log('Films:', this.movies);
+  async fetchMovies() {
+    try {
+      const moviesCollection = collection(this.firestore, 'films'); // Référence à la collection 'movies'
+      const moviesSnapshot = await getDocs(moviesCollection); // Récupération des documents
+      this.movies = moviesSnapshot.docs.map(doc => ({
+        id: doc.id, // ID du document
+        ...doc.data() // Données du film
+      }));
+  
+      console.log('Films récupérés:', this.movies);
+      // Vous pouvez initialiser `displayedList` avec les films si nécessaire
+      this.displayedList = this.movies;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des films :', error);
+    }
   }
+  
 
   // Fonction pour changer la liste affichée selon le segment
   onSegmentChange(event: any) {
@@ -90,6 +97,8 @@ export class HomeAdminPage implements OnInit {
   }
 
 
+
+  
   async showToast(message: string, color: string) {
     const toast = await this.toastController.create({
       message: message,
