@@ -15,7 +15,7 @@
         <ion-label>All Users</ion-label>
       </ion-segment-button>
       <ion-segment-button value="favorites">
-        <ion-label>Favorite Movies</ion-label>
+        <ion-label>All Movies</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -33,13 +33,13 @@
               <ion-col size="3">
                 <img
                   [src]="
-                    item.profileImage || 
-                    item.posterImage || 
+                    item.profileImage ||
+                    item.posterImage ||
                     'https://via.placeholder.com/100x100?text=No+Image'
                   "
                   alt="Image"
                   width="100"
-                  
+
                   style="border-radius: 10%;"
                 />
               </ion-col>
@@ -48,6 +48,7 @@
               <ion-col size="9" style="display: flex; flex-direction: column; justify-content: center;">
                 <ion-card-title>{{ item.firstName || item.title }}</ion-card-title>
                 <ion-card-subtitle>{{ item.email || item.description }}</ion-card-subtitle>
+                <ion-card-subtitle>{{ "" || item.type }}</ion-card-subtitle>
                 <ion-card-subtitle *ngIf="item.firstName">Age: {{ item.age }} ans</ion-card-subtitle>
               </ion-col>
             </ion-row>

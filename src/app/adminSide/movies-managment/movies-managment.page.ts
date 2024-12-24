@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class MoviesManagmentPage implements OnInit {
   movieTitle: string = ''; // Titre du film
   movieDescription: string = ''; // Description du film
+  type:string="";
   capturedImage: string | undefined; // URL de l'image capturée (Base64)
   uploading: boolean = false; // Indique si le téléchargement est en cours
   savedImageName: string | undefined;
@@ -78,6 +79,7 @@ export class MoviesManagmentPage implements OnInit {
     try {
       const movieData = {
         title: this.movieTitle,
+        type:this.type,
         description: this.movieDescription,
         profileImage: this.capturedImage || '', // Stocker l'image en Base64
       };
@@ -85,7 +87,7 @@ export class MoviesManagmentPage implements OnInit {
       await addDoc(collection(this.firestore, 'films'), movieData);
       console.log('Film ajouté avec succès.');
 
-      this.router.navigate(['/home-admin']);
+      this.router.navigateByUrl('/home-admin');
       this.resetForm();
     } catch (error) {
       console.error('Erreur lors de l\'ajout du film:', error);
@@ -98,6 +100,7 @@ export class MoviesManagmentPage implements OnInit {
   resetForm() {
     this.movieTitle = '';
     this.movieDescription = '';
+    this.type="";
     this.capturedImage = undefined;
   }
 }

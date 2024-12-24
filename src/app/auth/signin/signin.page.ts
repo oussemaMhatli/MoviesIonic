@@ -15,7 +15,7 @@ import { Firestore } from '@angular/fire/firestore';
 export class SigninPage implements OnInit {
   showPassword = false;
   toggleVisible = false;
-  private firestore: Firestore = inject(Firestore); 
+  private firestore: Firestore = inject(Firestore);
   userData: any = null;
   constructor(
     private auth: Auth,
@@ -78,6 +78,8 @@ export class SigninPage implements OnInit {
       console.log('Decoded Token:', decodedToken);
       const id=decodedToken.user_id;
       console.log('User ID:', id);
+      localStorage.setItem('id', id);
+
       // Retrieve user data from Firestore using the UID
       if (id) {
         this.userData = await this.fetchUserByUid(id);

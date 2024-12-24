@@ -1,5 +1,5 @@
   <!-- Top Highlighted Film -->
-  <div class="top-film" [ngStyle]="{ 'background-image': 'url(' + playlist[0]?.image + ')' }">
+  <div class="top-film" [ngStyle]="{ 'background-image': 'url(' + playlist[0]?.profileImage + ')' }">
     <div class="film-info">
       <h2>{{ playlist[0]?.title }}</h2>
       <ion-button class="watch-now"><ion-icon name="play-outline" slot="start"></ion-icon>Watch Now</ion-button>
@@ -12,13 +12,13 @@
 
   <!-- Vertical List for Remaining Films -->
   <div class="film-list">
-    <ion-item *ngFor="let film of playlist.slice(1)">
+    <ion-item *ngFor="let film of playlist">
       <ion-thumbnail slot="start">
-        <img [src]="film.image" />
+        <img [src]="film.profileImage" />
       </ion-thumbnail>
       <ion-label>
         <h2>{{ film.title }}</h2>
-        <p>Rating: {{ film.rating }} ★</p>
+        <p>Rating: 4 ★</p>
       </ion-label>
       <ion-icon name="play-outline" slot="end" style="color: aliceblue;"></ion-icon>
 
